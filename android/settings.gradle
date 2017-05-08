@@ -1,0 +1,3 @@
+rootProject.name = 'climber'
+
+include ':app'
