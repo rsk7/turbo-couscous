@@ -23,6 +23,8 @@ export default class climber extends Component {
         <StatusBar
          backgroundColor="black"
          barStyle="light-content"/>
+        <View style={{height: 300}}>
+        </View>
         <BoulderRating/>
       </View>
     );

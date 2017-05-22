@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  TouchableOpacity,
-  Alert,
   View,
-  Text
+  Text,
+  ScrollView
 } from 'react-native';
+import Button from 'react-native-button';
+import ColorPicker from './colorpicker';
 
-const RANGE = 9;
+const RANGE = 12;
 const buttonTitle = idx => `V ${idx}`;
 const accessibilityLabel = idx => `rating v ${idx}`;
 
@@ -16,54 +17,73 @@ const buttonState = Array(RANGE).fill().reduce((memo, _, idx) => {
   return memo;
 }, {});
 
+const toggleButton = (idx) => () => {
+  buttonState[idx] = !buttonState[idx];
+};
+
+const test = () => {
+  console.log('test');
+};
+
 export default class BoulderRating extends Component {
   constructor(props) {
     super(props);
     this.state = buttonState;
   }
 
+  update(action) {
+    return () => {
+      action();
+      this.setState(buttonState);
+    };
+  }
+
+  textClick() {
+    console.log('text clicked');
+  }
+
   render() {
     const buttons = Array(RANGE).fill().map((_, idx) => {
       return (
-        <TouchableOpacity key={idx}
-          style={buttonCss(idx)}>
-          <Text style={styles.text}>{buttonTitle(idx)}</Text>
-        </TouchableOpacity>
+        <Button
+          key={idx}
+          containerStyle={styles.button}
+          style={{color: 'gainsboro'}}
+          onPress={this.textClick}>
+          V{idx}
+        </Button>
       );
     });
 
     return (
-      <View style={styles.container}>
-        {buttons}
+      // <View style={styles.container}>
+      <View style={{height: 300}}>
+        <ColorPicker rating="V1">
+        </ColorPicker>
+        <ScrollView contentContainerStyle={styles.container} style={{height: 200}}>
+          {buttons}
+        </ScrollView>
       </View>
     );
   }
 }
 
-const buttonCss = (idx) => ({
-  borderColor: '#BEBEBE',
-  borderWidth: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  height: 75,
-  width: 75,
-  backgroundColor: buttonState[idx] ? '#E4E4E4' : 'black',
-  marginLeft: 10,
-  marginRight: 10,
-  marginTop: 10,
-  marginBottom: 10
-});
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexWrap: 'wrap',
     flexDirection: 'row',
-    paddingTop: '65%',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    width: 300
   },
-  text: {
-    color: 'white',
-    fontSize: 14 
+  button: {
+    width: 75,
+    height: 75,
+    borderColor: '#e7e7e7',
+    borderRadius: 4,
+    borderWidth: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10
   }
 });
