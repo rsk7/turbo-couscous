@@ -10,7 +10,7 @@ import { ratingColorButtons, selectedRatingColorButtons } from './colorpicker-sp
 export default class ColorPicker extends Component {
   constructor(props) {
     super(props);
-    this.state = ratingColorButtons();
+    this.state = ratingColorButtons() ;
   }
 
   selectColor(colorName) {
@@ -23,7 +23,7 @@ export default class ColorPicker extends Component {
       return (
         <Button
           key={c.name}
-          containerStyle={colorButtonStyle(c.name)}
+          containerStyle={colorButtonStyle(c.name, selectedColor)}
           style={{
             color: c.name,
             borderColor: 'white',
@@ -54,8 +54,7 @@ export default class ColorPicker extends Component {
   }
 }
 
-const colorButtonStyle = (color) => {
-  const borderColor = color === 'black' ? 'white' : color;
+const colorButtonStyle = (color, selectedColor) => {
   return {
     width: 35,
     height: 35,
@@ -65,7 +64,7 @@ const colorButtonStyle = (color) => {
     borderRadius: 5,
     alignItems: 'center',
     backgroundColor: color,
-    borderWidth: 2,
+    borderWidth: color === selectedColor ? 2 : 0.5,
     borderColor: 'white'
   };
 };
