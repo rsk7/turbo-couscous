@@ -7,59 +7,38 @@ import {
 } from 'react-native';
 import Button from 'react-native-button';
 import ColorPicker from './colorpicker';
-
-const RANGE = 12;
-const buttonTitle = idx => `V ${idx}`;
-const accessibilityLabel = idx => `rating v ${idx}`;
-
-const buttonState = Array(RANGE).fill().reduce((memo, _, idx) => {
-  memo[idx] = false;
-  return memo;
-}, {});
-
-const toggleButton = (idx) => () => {
-  buttonState[idx] = !buttonState[idx];
-};
-
-const test = () => {
-  console.log('test');
-};
+import { ratingButtons, selectButton } from './boulder-sp';
 
 export default class BoulderRating extends Component {
   constructor(props) {
     super(props);
-    this.state = buttonState;
+    this.state = ratingButtons();
   }
 
-  update(action) {
-    return () => {
-      action();
-      this.setState(buttonState);
-    };
-  }
-
-  textClick() {
-    console.log('text clicked');
+  select(button) {
+    this.setState(selectButton(button.rating));
   }
 
   render() {
-    const buttons = Array(RANGE).fill().map((_, idx) => {
+    const selected = this.state.buttons.find(b => b.selected);
+    const colorPicker = !selected ? null
+      : <ColorPicker rating={selected.name}></ColorPicker>
+
+    const buttons = this.state.buttons.map(b => {
       return (
         <Button
-          key={idx}
+          key={b.rating}
           containerStyle={styles.button}
           style={{color: 'gainsboro'}}
-          onPress={this.textClick}>
-          V{idx}
+          onPress={() => this.select(b)}>
+          {b.name}
         </Button>
       );
     });
 
     return (
-      // <View style={styles.container}>
       <View style={{height: 300}}>
-        <ColorPicker rating="V1">
-        </ColorPicker>
+        {colorPicker}
         <ScrollView contentContainerStyle={styles.container} style={{height: 200}}>
           {buttons}
         </ScrollView>

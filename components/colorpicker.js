@@ -5,41 +5,48 @@ import {
   Text
 } from 'react-native';
 import Button from 'react-native-button';
-
-const colorState = (state = {}, action) => {
-  const colors = ['blue', 'green', 'red', 'orange', 'yellow', 'purple', 'black', 'white']
-    .map(c => ({ name: c, selected: false }));
-  return { colors };
-};
+import { ratingColorButtons, selectedRatingColorButtons } from './colorpicker-sp';
 
 export default class ColorPicker extends Component {
   constructor(props) {
     super(props);
-    this.state = colorState();
+    this.state = ratingColorButtons();
   }
 
-  selectColor() {
-
+  selectColor(colorName) {
+    this.setState(selectedRatingColorButtons(colorName));
   }
 
   render() {
+    const selectedColor = this.state.colors.find(c => c.selected).name;
     const buttons = this.state.colors.map(c => {
       return (
         <Button
           key={c.name}
           containerStyle={colorButtonStyle(c.name)}
-          style={{color: c.name, borderColor: 'white', borderWidth: 1}}
-          onPress={this.selectColor}>
+          style={{
+            color: c.name,
+            borderColor: 'white',
+            borderWidth: 1}}
+          onPress={() => this.selectColor(c.name)}>
         </Button>
       );
     });
 
     return (
-      <View style={{flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-start'}}>
+      <View style={{
+          flexWrap: 'wrap',
+          flexDirection: 'row',
+          alignItems: 'flex-start'}}>
         <View style={styles.container}>
           {buttons}
         </View>
-        <Button containerStyle={styles.button} style={{color: 'white', fontSize: 20, textShadowColor: 'black', textShadowOffset: { height: 1, width: 1}, textShadowRadius: 4}}>
+        <Button containerStyle={selectedButtonStyle(selectedColor)} style={{
+          color: 'white',
+          fontSize: 20,
+          textShadowColor: 'black',
+          textShadowOffset: { height: 1, width: 1},
+          textShadowRadius: 4}}>
           {this.props.rating}
         </Button>
       </View>
@@ -63,6 +70,21 @@ const colorButtonStyle = (color) => {
   };
 };
 
+const selectedButtonStyle = (backgroundColor) => {
+  return {
+    width: 75,
+    height: 75,
+    borderColor: 'white',
+    borderRadius: 4,
+    borderWidth: 1,
+    display: 'flex',
+    backgroundColor: backgroundColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 8 
+  };
+};
+
 const styles = StyleSheet.create({
   container: {
     flexWrap: 'wrap',
@@ -70,17 +92,5 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     paddingLeft: 12,
     width: 200
-  },
-  button: {
-    width: 75,
-    height: 75,
-    borderColor: 'white',
-    borderRadius: 4,
-    borderWidth: 4,
-    display: 'flex',
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 8 
   }
 });
